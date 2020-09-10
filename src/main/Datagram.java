@@ -1,5 +1,8 @@
 package main;
 
+import java.awt.Frame;
+import java.util.ArrayList;
+
 public class Datagram {
 
 	private int mtu;
@@ -7,17 +10,53 @@ public class Datagram {
 	private String headerLength;
 	private String typeOfService;
 	private int packetLength; /**/
-	private String flags; /**/
-	private String fragmentOffset; /**/
 
 	public Datagram(int packetLength, int mtu) {
 		this.packetLength = packetLength;
-		this.mtu = mtu; 
+		this.mtu = mtu;
 		findNumberOfFragments();
 	}
 
 	public void findNumberOfFragments() {
-		numberOfFragments = (int) Math.ceil(((double)(packetLength - 20)) / mtu);
+		numberOfFragments = (int) Math.ceil(((double) (packetLength - 20)) / mtu);
+	}
+
+	public ArrayList<String> getFragments() {
+		
+		ArrayList<String>fragments=new ArrayList<String>();
+		
+	
+		if (this.numberOfFragments != 1) {
+			int dataLength=packetLength-20;
+			int offset=0;
+			int fragmentLength = mtu;
+			int fragmentLengthAcua=0;
+			String flags="000";
+			
+		
+			for (int i = 0; i < numberOfFragments; i++) {
+				
+				if((fragmentLengthAcua+(mtu-20))<dataLength) {
+					
+					fragmentLength=mtu-20;
+					
+				}else {
+					fragmentLength=dataLength-fragmentLengthAcua;
+				
+				}
+				
+				fragmentLengthAcua+=mtu-20;
+				
+				offset=fragmentLengthAcua-(mtu-20);
+			
+				fragments.add((fragmentLength+20)+"/"+(offset/8));
+			}
+
+		}else {
+			fragments.add( packetLength + "/000/00000000000000/0/0000");
+		}
+		return fragments;
+		
 	}
 
 	public int getMtu() {
@@ -50,22 +89,6 @@ public class Datagram {
 
 	public void setPacketLength(int packetLength) {
 		this.packetLength = packetLength;
-	}
-
-	public String getFlags() {
-		return flags;
-	}
-
-	public void setFlags(String flags) {
-		this.flags = flags;
-	}
-
-	public String getFragmentOffset() {
-		return fragmentOffset;
-	}
-
-	public void setFragmentOffset(String fragmentOffset) {
-		this.fragmentOffset = fragmentOffset;
 	}
 
 }

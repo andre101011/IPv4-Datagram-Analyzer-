@@ -9,6 +9,7 @@ public class main {
 		int mtu = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el tamaño del MTU"));
 		Datagram datagram = new Datagram(packetLength, mtu);
 		JOptionPane.showMessageDialog(null, datagram.getNumberOfFragments());
+		System.out.println(datagram.getFragments());
 	}
 
 }

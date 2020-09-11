@@ -22,41 +22,30 @@ public class Datagram {
 	}
 
 	public ArrayList<String> getFragments() {
-		
-		ArrayList<String>fragments=new ArrayList<String>();
-		
-	
-		if (this.numberOfFragments != 1) {
-			int dataLength=packetLength-20;
-			int offset=0;
+		ArrayList<String> fragments = new ArrayList<String>();
+		if (this.numberOfFragments != 1) { //si length > mtu
+			int headerSize = 20;
+			int mtuData =  mtu-headerSize;
+			int dataLength = packetLength - headerSize; 
+			int offset = 0;
 			int fragmentLength = mtu;
-			int fragmentLengthAcua=0;
-			String flags="000";
-			
-		
-			for (int i = 0; i < numberOfFragments; i++) {
-				
-				if((fragmentLengthAcua+(mtu-20))<dataLength) {
-					
-					fragmentLength=mtu-20;
-					
-				}else {
-					fragmentLength=dataLength-fragmentLengthAcua;
-				
-				}
-				
-				fragmentLengthAcua+=mtu-20;
-				
-				offset=fragmentLengthAcua-(mtu-20);
-			
-				fragments.add((fragmentLength+20)+"/"+(offset/8));
-			}
+			int acumulatedFragmentDataLength = 0;
+			String flags = "000";
 
-		}else {
-			fragments.add( packetLength + "/000/00000000000000/0/0000");
+			for (int i = 0; i < numberOfFragments; i++) {
+				if ((acumulatedFragmentDataLength + mtuData) < dataLength) {
+					fragmentLength = mtuData;
+				} else {
+					fragmentLength = dataLength - acumulatedFragmentDataLength;
+				}
+				acumulatedFragmentDataLength += mtuData;
+				offset = acumulatedFragmentDataLength - mtuData;
+				fragments.add((fragmentLength + headerSize) + "/" + (offset / 8));
+			}
+		} else {
+			fragments.add(packetLength + "/000/00000000000000/0/0000");
 		}
 		return fragments;
-		
 	}
 
 	public int getMtu() {

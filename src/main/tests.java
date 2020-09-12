@@ -27,5 +27,12 @@ class tests {
 		Datagram datagram1 = new Datagram(200,500);
 		assertEquals(1, datagram1.getNumberOfFragments());
 	}
+	
+	@Test
+	void test5() {
+		Datagram datagram1 = new Datagram(4000,1500);
+		//assertEquals(1, datagram1.getNumberOfFragments());
+		System.out.println(datagram1.getFragments());
+	}
 
 }

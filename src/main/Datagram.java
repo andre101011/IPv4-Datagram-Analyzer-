@@ -23,29 +23,95 @@ public class Datagram {
 
 	public ArrayList<String> getFragments() {
 		ArrayList<String> fragments = new ArrayList<String>();
-		if (this.numberOfFragments != 1) { //si length > mtu
+		if (this.numberOfFragments != 1) { // si length > mtu
 			int headerSize = 20;
-			int mtuData =  mtu-headerSize;
-			int dataLength = packetLength - headerSize; 
+			int mtuData = mtu - headerSize;
+			int dataLength = packetLength - headerSize;
 			int offset = 0;
 			int fragmentLength = mtu;
 			int acumulatedFragmentDataLength = 0;
-			String flags = "000";
+			String flags = "001";
 
 			for (int i = 0; i < numberOfFragments; i++) {
-				if ((acumulatedFragmentDataLength + mtuData) < dataLength) {
+				if ((acumulatedFragmentDataLength + mtuData) < dataLength) { // si los datos acumulados son menores que
+																				// los datos totales sin ecabezado
 					fragmentLength = mtuData;
-				} else {
-					fragmentLength = dataLength - acumulatedFragmentDataLength;
+				} else { // si los datos aculumados al sumarle mtuData supera el numero de datos
+							// totales(sin encabezado)
+
+					fragmentLength = dataLength - acumulatedFragmentDataLength; // a la longitud de los datos se le
+					flags = "000"; // resta los datos acumulados y nos da
+									// la longitud del ultimo fragmento
 				}
-				acumulatedFragmentDataLength += mtuData;
-				offset = acumulatedFragmentDataLength - mtuData;
-				fragments.add((fragmentLength + headerSize) + "/" + (offset / 8));
+
+				acumulatedFragmentDataLength += mtuData; // acumula los datos que van "pasando" por el mtu
+				
+
+				offset = acumulatedFragmentDataLength - mtuData; // calcula el offset a apartir de los datos acumulados
+				String binaryOffset = binaryOffset(offset);
+				String hexa = convertToHexa(flags + binaryOffset);
+
+				fragments.add((fragmentLength + headerSize) + "/" + flags + "/" + binaryOffset + "/" + (offset / 8)+"/"+hexa);
+
 			}
 		} else {
 			fragments.add(packetLength + "/000/00000000000000/0/0000");
 		}
 		return fragments;
+	}
+
+	/**Metodo que convierte de binario a hexa de 4 digitos
+	 * primero se pasa el binario a decimal y luego ese decimal se pasa a hexa
+	 * todod con el fin de utilizar los metodos de java
+	 * 
+	 * @param binario
+	 * @return
+	 */
+	
+	private String convertToHexa(String binario) {
+	
+		
+		int number=Integer.parseInt(binario, 2);
+		String numberHexa=Integer.toHexString(number);
+		
+		int complete=4-numberHexa.length();
+		
+		for (int i = 0; i < complete; i++) {
+			
+			numberHexa="0"+numberHexa;
+		}
+				
+		return numberHexa;
+	}
+
+	/*
+	 * Metodo que covierte el offset a binario y completa con ceros a la derecha
+	 * hasta completar los 13 bits 
+	 */
+
+	private String binaryOffset(int offset) {
+
+		String binaryOffset = decimalToBinary(offset);
+
+		int bitsToComplete = 13 - binaryOffset.length();
+		for (int i = 0; i < bitsToComplete; i++) {
+			binaryOffset = "0" + binaryOffset;
+		}
+
+		return binaryOffset;
+	}
+
+	public String decimalToBinary(int num) {
+
+		if (num != 0) {
+			int div = num / 2;
+			String res = "" + (num % 2);
+			return decimalToBinary(div) + res;
+
+		} else {
+			return "";
+		}
+
 	}
 
 	public int getMtu() {

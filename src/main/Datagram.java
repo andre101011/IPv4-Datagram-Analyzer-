@@ -101,7 +101,7 @@ public class Datagram {
 	}
 
 	public void print() {
-		TableList tl = new TableList(6, "N°", "Total Length", "flags", "Offset (BIN)", "Offset (DEC)", "Offset (HEX)")
+		TableList tl = new TableList(6, "N°", "Total Length", "flags", "Offset (BIN)", "Offset (DEC)", "16 digits (HEX)")
 				.sortBy(0);
 		for (int i = 0; i < fragments.size(); i++) {
 			String fragmentData[] = fragments.get(i).split("/");

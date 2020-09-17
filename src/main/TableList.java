@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class TableList {
 	public TableList(String... descriptions) {
 		this(descriptions.length, descriptions);
 	}
-	
+
 	public TableList(int columns, String... descriptions) {
 		if (descriptions.length != columns) {
 			throw new IllegalArgumentException();

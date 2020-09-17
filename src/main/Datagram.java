@@ -31,7 +31,6 @@ public class Datagram {
 			int fragmentLength = mtu;
 			int acumulatedFragmentDataLength = 0;
 			String flags = "001";
-
 			for (int i = 0; i < numberOfFragments; i++) {
 				if ((acumulatedFragmentDataLength + mtuData) < dataLength) { // si los datos acumulados son menores que
 					fragmentLength = mtuData;// los datos totales sin ecabezado
@@ -47,7 +46,6 @@ public class Datagram {
 
 				fragments.add((fragmentLength + headerSize) + "/" + flags + "/" + binaryOffset + "/" + (offset / 8)
 						+ "/" + hexa);
-
 			}
 		} else {
 			fragments.add(packetLength + "/000/00000000000000/0/0000");
@@ -110,14 +108,6 @@ public class Datagram {
 		tl.print();
 	}
 
-	public int getMtu() {
-		return mtu;
-	}
-
-	public void setMtu(int mtu) {
-		this.mtu = mtu;
-	}
-
 	public int getNumberOfFragments() {
 		return numberOfFragments;
 	}
@@ -146,8 +136,5 @@ public class Datagram {
 		return fragments;
 	}
 
-	public void setFragments(ArrayList<String> fragments) {
-		this.fragments = fragments;
-	}
 
 }

@@ -21,7 +21,7 @@ public class Datagram {
 		numberOfFragments = (int) Math.ceil(((double) (packetLength - 20)) / mtu);
 	}
 
-	public void computeFragments() {
+	public void computeFragments() { 
 		ArrayList<String> fragments = new ArrayList<String>();
 		if (this.numberOfFragments != 1) { // si length > mtu
 			int headerSize = 20;
@@ -39,8 +39,8 @@ public class Datagram {
 					fragmentLength = dataLength - acumulatedFragmentDataLength; // a la longitud de los datos se le
 					flags = "000"; // resta los datos acumulados y nos da la longitud del ultimo fragmento
 				}
+				offset = acumulatedFragmentDataLength; // calcula el offset a apartir de los datos acumulados
 				acumulatedFragmentDataLength += mtuData; // acumula los datos que van "pasando" por el mtu
-				offset = acumulatedFragmentDataLength - mtuData; // calcula el offset a apartir de los datos acumulados
 				String binaryOffset = binaryOffset(offset);
 				String hexa = convertToHexa(flags + binaryOffset);
 
@@ -62,7 +62,7 @@ public class Datagram {
 	 * @return offset in hexadecimal
 	 */
 
-	private String convertToHexa(String binary) {
+	private String convertToHexa(String binary) { 
 		int number = Integer.parseInt(binary, 2);
 		String numberHexa = Integer.toHexString(number);
 		int complete = 4 - numberHexa.length();

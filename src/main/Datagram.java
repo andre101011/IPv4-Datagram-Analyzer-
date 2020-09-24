@@ -18,7 +18,7 @@ public class Datagram {
 	}
 
 	public void findNumberOfFragments() {
-		numberOfFragments = (int) Math.ceil(((double) (packetLength - 20)) / mtu);
+		numberOfFragments = (int) Math.ceil(((double) (packetLength +1)) / mtu);
 	}
 
 	public void computeFragments() { 

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import main.Datagram;
 
 class tests {
+	
+
 
 	@Test
 	void numberOfFragmentsTest1() {
@@ -17,13 +19,13 @@ class tests {
 	@Test
 	void numberOfFragmentsTest2() {
 		Datagram datagram = new Datagram(7500, 1500);
-		assertEquals(5, datagram.getNumberOfFragments());
+		assertEquals(6, datagram.getNumberOfFragments());
 	}
 
 	@Test
 	void numberOfFragmentsTest3() {
 		Datagram datagram = new Datagram(8000, 500);
-		assertEquals(16, datagram.getNumberOfFragments());
+		assertEquals(17, datagram.getNumberOfFragments());
 	}
 
 	@Test
@@ -101,6 +103,12 @@ class tests {
 	void printTest() {
 		Datagram datagram = new Datagram(4000, 1500);
 		datagram.print();
+	}
+	
+	@Test
+	void nonFragmented() {
+		Datagram datagram = new Datagram(4000, 4000);
+		assertEquals(1, datagram.getNumberOfFragments());
 	}
 
 }
